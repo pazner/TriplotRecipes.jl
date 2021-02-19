@@ -5,3 +5,7 @@ The mesh itself can be shown with `trimesh`.
 The contour line computation and pseudocolor rasterization is performed with https://github.com/pazner/TriplotBase.jl[TriplotBase.jl].
 
 Filled contour plots are not currently supported.
+
+Example generated with `examples/dolphin.jl`:
+
+image::examples/dolphin.png[dolphin]
