@@ -6,6 +6,19 @@ The contour line computation and pseudocolor rasterization is performed with htt
 
 Filled contour plots are not currently supported.
 
+== Installation
+
+This package and `TriplotBase.jl` are not registered, and so they can be installed with:
+
+[source,julia]
+----
+using Pkg
+Pkg.add(url="https://github.com/pazner/TriplotBase.jl")
+Pkg.add(url="https://github.com/pazner/TriplotRecipes.jl")
+----
+
+== Example
+
 Example generated with `examples/dolphin.jl`:
 
 image::examples/dolphin.png[dolphin]
