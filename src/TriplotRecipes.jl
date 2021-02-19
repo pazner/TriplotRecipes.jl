@@ -2,7 +2,7 @@ module TriplotRecipes
 
 using PlotUtils,RecipesBase,TriplotBase
 
-export tricontour,tricontour!,tripcolor,tripcolor!
+export tricontour,tricontour!,tripcolor,tripcolor!,trimesh,trimesh!
 
 function append_with_nan!(a,b)
     append!(a,b)
@@ -30,12 +30,7 @@ end
 tricontour(x,y,z,t,levels;kw...) = RecipesBase.plot(TriplotBase.tricontour(x,y,z,t,levels);kw...)
 tricontour!(x,y,z,t,levels;kw...) = RecipesBase.plot!(TriplotBase.tricontour(x,y,z,t,levels);kw...)
 
-struct TriPseudocolor{X,Y,Z,T}
-    x::X
-    y::Y
-    z::Z
-    t::T
-end
+struct TriPseudocolor{X,Y,Z,T} x::X; y::Y; z::Z; t::T; end
 
 @recipe function f(p::TriPseudocolor;px=512,py=512,ncolors=256)
     cmap = range(extrema(p.z)...,length=ncolors)
@@ -48,5 +43,23 @@ end
 
 tripcolor(x,y,z,t;kw...) = RecipesBase.plot(TriPseudocolor(x,y,z,t);kw...)
 tripcolor!(x,y,z,t;kw...) = RecipesBase.plot!(TriPseudocolor(x,y,z,t);kw...)
+
+struct TriMesh{X,Y,T} x::X; y::Y; t::T; end
+
+@recipe function f(m::TriMesh)
+    x = Vector{eltype(m.x)}()
+    y = Vector{eltype(m.y)}()
+    for t=eachcol(m.t)
+        append_with_nan!(x,[m.x[t];m.x[t[1]]])
+        append_with_nan!(y,[m.y[t];m.y[t[1]]])
+    end
+    seriestype := :shape
+    seriescolor --> RGB(0.7,1.0,0.8)
+    label --> nothing
+    x,y
+end
+
+trimesh(x,y,t;kw...) = RecipesBase.plot(TriMesh(x,y,t);kw...)
+trimesh!(x,y,t;kw...) = RecipesBase.plot!(TriMesh(x,y,t);kw...)
 
 end
