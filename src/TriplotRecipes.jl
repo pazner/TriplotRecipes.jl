@@ -10,6 +10,8 @@ function append_with_nan!(a,b)
 end
 
 @recipe function f(contours::Vector{TriplotBase.Contour{T}}) where {T}
+    color = get(plotattributes, :seriescolor, :auto)
+    set_line_z = (color == :auto || plot_color(color) isa ColorGradient)
     for c=contours
         x = T[]
         y = T[]
@@ -21,7 +23,9 @@ end
         end
         @series begin
             label := nothing
-            line_z := z
+            if set_line_z
+                line_z := z
+            end
             x,y
         end
     end
