@@ -19,7 +19,7 @@ end
         for polyline=c.polylines
             append_with_nan!(x,first.(polyline))
             append_with_nan!(y,last.(polyline))
-            push!(z,c.level)
+            append!(z,fill(c.level,length(polyline)))
         end
         @series begin
             label := nothing
