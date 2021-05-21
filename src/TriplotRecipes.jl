@@ -2,7 +2,7 @@ module TriplotRecipes
 
 using PlotUtils,RecipesBase,TriplotBase
 
-export tricontour,tricontour!,tripcolor,tripcolor!,trimesh,trimesh!
+export tricontour,tricontour!,tripcolor,tripcolor!,dgtripcolor,dgtripcolor!,trimesh,trimesh!
 
 function append_with_nan!(a,b)
     append!(a,b)
@@ -47,6 +47,20 @@ end
 
 tripcolor(x,y,z,t;kw...) = RecipesBase.plot(TriPseudocolor(x,y,z,t);kw...)
 tripcolor!(x,y,z,t;kw...) = RecipesBase.plot!(TriPseudocolor(x,y,z,t);kw...)
+
+struct DGTriPseudocolor{X,Y,Z,T} x::X; y::Y; z::Z; t::T; end
+
+@recipe function f(p::DGTriPseudocolor;px=512,py=512,ncolors=256)
+    cmap = range(extrema(p.z)...,length=ncolors)
+    x = range(extrema(p.x)...,length=px)
+    y = range(extrema(p.y)...,length=py)
+    z = TriplotBase.dgtripcolor(p.x,p.y,p.z,p.t,cmap;bg=NaN,px=px,py=py)
+    seriestype := :heatmap
+    x,y,z'
+end
+
+dgtripcolor(x,y,z,t;kw...) = RecipesBase.plot(DGTriPseudocolor(x,y,z,t);kw...)
+dgtripcolor!(x,y,z,t;kw...) = RecipesBase.plot!(DGTriPseudocolor(x,y,z,t);kw...)
 
 struct TriMesh{X,Y,T} x::X; y::Y; t::T; end
 
