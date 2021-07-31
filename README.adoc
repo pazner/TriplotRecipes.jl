@@ -1,24 +1,31 @@
 = TriplotRecipes.jl
 
-This package provides recipes for Plots.jl for plotting contour lines and pseudocolor plots on unstructured triangular meshes (`tricontour` and `tripcolor`).
+This package provides recipes for https://github.com/JuliaPlots/Plots.jl[Plots.jl] for plotting contour lines and pseudocolor plots on unstructured triangular meshes (`tricontour` and `tripcolor`).
 The mesh itself can be shown with `trimesh`.
 The contour line computation and pseudocolor rasterization is performed with https://github.com/pazner/TriplotBase.jl[TriplotBase.jl].
 
-Filled contour plots are not currently supported.
-
-== Installation
-
-This package and `TriplotBase.jl` are not registered, and so they can be installed with:
-
-[source,julia]
-----
-using Pkg
-Pkg.add(url="https://github.com/pazner/TriplotBase.jl")
-Pkg.add(url="https://github.com/pazner/TriplotRecipes.jl")
-----
+Filled contour plots are not currently supported (cf. https://github.com/JuliaPlots/Plots.jl/issues/972[this issue] in Plots.jl).
 
 == Example
 
 Example generated with `examples/dolphin.jl`:
 
 image::examples/dolphin.png[dolphin]
+
+== Usage
+
+The main functionality of TriplotRecipes.jl is provided in the following functions:
+
+* `tricontour`
+* `tripcolor` (and the closely related `dgtripcolor`)
+* `trimesh`
+
+The functions `tricontour` and `tripcolor` take arrays of vertex coordinates (`x` and `y`), vertex funciton values (`z`), and a triangulation (`t`).
+`tricontour` also takes a `levels` argument, which is either an integer (number of contour lines) or a list of contour values.
+The variant `dgtripcolor` is intended for drawing pseudocolor plots of discontinuous fields.
+In this case, the `z` array has shape `(3, nt)`, where `nt` is the number of triangles.
+
+The function `trimesh` takes vertex coordinates (`x` and `y`) and a triangulation (`t`) and draws the mesh.
+The line color and fill color (potentially transparent) can be specified.
+
+All of these functions accept keyword arguments for http://docs.juliaplots.org/latest/attributes/[Plots.jl attributes].
