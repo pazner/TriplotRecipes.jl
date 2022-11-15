@@ -46,7 +46,7 @@ struct TriPseudocolor{X,Y,Z,T} x::X; y::Y; z::Z; t::T; end
 end
 
 # plots a vector of TriPseudocolor instances by merging them.
-@recipe function f(plist::Vector{<:TriPseudocolor}; 
+@recipe function f(plist::AbstractVector{<:TriPseudocolor}; 
                    px=512, py=512, ncolors=256) 
                
     x = eltype(plist[1].x)[]
