@@ -45,6 +45,42 @@ struct TriPseudocolor{X,Y,Z,T} x::X; y::Y; z::Z; t::T; end
     x,y,z'
 end
 
+# plots a vector of TriPseudocolor instances by merging them.
+@recipe function f(plist::AbstractVector{<:TriPseudocolor}; 
+                   px=512, py=512, ncolors=256) 
+               
+    x = eltype(plist[1].x)[]
+    y = eltype(plist[1].y)[]
+
+    # TriplotBase.dgtripcolor requires `z` and `t` be the same size
+    num_triangles_total = mapreduce(x->size(x.t, 2), +, plist)
+    z = Matrix{eltype(plist[1].z)}(undef, 3, num_triangles_total)
+    t = Matrix{eltype(plist[1].t)}(undef, 3, num_triangles_total) 
+
+    vertex_offset = zero(eltype(t))
+    triangle_offset = zero(eltype(t))
+    for p in plist
+        @assert length(p.x) == length(p.y) == length(p.z)
+        append!(x, p.x)
+        append!(y, p.y)
+        num_vertices = length(p.x)
+        num_triangles = size(p.t, 2)
+        columns = (1:num_triangles) .+ triangle_offset
+        @. z[:, columns] = p.z[p.t]
+        @. t[:, columns] = p.t + vertex_offset
+        vertex_offset += num_vertices
+        triangle_offset += num_triangles
+    end
+
+    cmap = range(extrema(z)..., length=ncolors)
+    xx = range(extrema(x)..., length=px)
+    yy = range(extrema(y)..., length=py)
+    zz = TriplotBase.dgtripcolor(x, y, z, t, cmap; bg=NaN, px=px, py=py)
+
+    seriestype := :heatmap
+    xx, yy, zz'
+end
+
 tripcolor(x,y,z,t;kw...) = RecipesBase.plot(TriPseudocolor(x,y,z,t);kw...)
 tripcolor!(x,y,z,t;kw...) = RecipesBase.plot!(TriPseudocolor(x,y,z,t);kw...)
 
