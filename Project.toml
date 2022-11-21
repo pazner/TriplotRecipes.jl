@@ -1,7 +1,7 @@
 name = "TriplotRecipes"
 uuid = "808ab39a-a642-4abf-81ff-4cb34ebbffa3"
 authors = ["Will Pazner <will.e.p@gmail.com>"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 PlotUtils = "995b91a9-d308-5afd-9ec6-746e21dbc043"
