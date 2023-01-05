@@ -1,8 +1,12 @@
 module TriplotRecipes
 
-using PlotUtils,RecipesBase,TriplotBase
+using RecipesBase: RecipesBase, @recipe, @series
+using TriplotBase: TriplotBase
 
-export tricontour,tricontour!,tripcolor,tripcolor!,dgtripcolor,dgtripcolor!,trimesh,trimesh!
+export tricontour, tricontour!,
+       tripcolor, tripcolor!,
+       dgtripcolor, dgtripcolor!,
+       trimesh, trimesh!
 
 function append_with_nan!(a,b)
     append!(a,b)
@@ -11,7 +15,7 @@ end
 
 @recipe function f(contours::Vector{TriplotBase.Contour{T}}) where {T}
     color = get(plotattributes, :seriescolor, :auto)
-    set_line_z = (color == :auto || plot_color(color) isa ColorGradient)
+    set_line_z = (color === :auto || plot_color(color) isa ColorGradient)
     for c=contours
         x = T[]
         y = T[]
@@ -46,16 +50,16 @@ struct TriPseudocolor{X,Y,Z,T} x::X; y::Y; z::Z; t::T; end
 end
 
 # plots a vector of TriPseudocolor instances by merging them.
-@recipe function f(plist::AbstractVector{<:TriPseudocolor}; 
-                   px=512, py=512, ncolors=256) 
-               
+@recipe function f(plist::AbstractVector{<:TriPseudocolor};
+                   px=512, py=512, ncolors=256)
+
     x = eltype(plist[1].x)[]
     y = eltype(plist[1].y)[]
 
     # TriplotBase.dgtripcolor requires `z` and `t` be the same size
     num_triangles_total = mapreduce(x->size(x.t, 2), +, plist)
     z = Matrix{eltype(plist[1].z)}(undef, 3, num_triangles_total)
-    t = Matrix{eltype(plist[1].t)}(undef, 3, num_triangles_total) 
+    t = Matrix{eltype(plist[1].t)}(undef, 3, num_triangles_total)
 
     vertex_offset = zero(eltype(t))
     triangle_offset = zero(eltype(t))
@@ -108,7 +112,7 @@ struct TriMesh{X,Y,T} x::X; y::Y; t::T; end
         append_with_nan!(y,[m.y[t];m.y[t[1]]])
     end
     seriestype := :shape
-    seriescolor --> RGB(0.7,1.0,0.8)
+    seriescolor --> "LightCyan"
     label --> nothing
     x,y
 end
