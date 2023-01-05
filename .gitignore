@@ -1,2 +1,4 @@
 Manifest.toml
 **/*.cov
+/*.png
+test/*.png
