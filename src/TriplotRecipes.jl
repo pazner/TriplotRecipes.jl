@@ -1,6 +1,5 @@
 module TriplotRecipes
 
-using PlotUtils: RGB
 using RecipesBase: RecipesBase, @recipe, @series
 using TriplotBase: TriplotBase
 
@@ -16,7 +15,7 @@ end
 
 @recipe function f(contours::Vector{TriplotBase.Contour{T}}) where {T}
     color = get(plotattributes, :seriescolor, :auto)
-    set_line_z = (color == :auto || plot_color(color) isa ColorGradient)
+    set_line_z = (color === :auto || plot_color(color) isa ColorGradient)
     for c=contours
         x = T[]
         y = T[]
@@ -113,7 +112,7 @@ struct TriMesh{X,Y,T} x::X; y::Y; t::T; end
         append_with_nan!(y,[m.y[t];m.y[t[1]]])
     end
     seriestype := :shape
-    seriescolor --> RGB(0.7, 1.0, 0.8)
+    seriescolor --> "LightCyan"
     label --> nothing
     x,y
 end
